@@ -9,6 +9,7 @@ from firebase_admin import credentials, storage
 import os
 import uuid
 from datetime import datetime
+import json
 
 # Initialize Firebase Admin 
 # Get credentials from environment variable
