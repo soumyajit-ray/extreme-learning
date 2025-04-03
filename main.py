@@ -210,7 +210,7 @@ async def process_text(request: TextRequest):
     # Create slide images
     for slide in slides:
         img_path = create_slide_image(slide, slides_folder)
-        print(f"Created image for slide {slide['number']}: {img_path})
+        print(f"Created image for slide {slide['number']}: {img_path}")
     # Create video
     create_video_from_slides_and_audio(slides_folder, audio_folder, output_video)
 
