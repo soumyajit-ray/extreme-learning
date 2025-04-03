@@ -4,6 +4,49 @@ from pydantic import BaseModel
 import uuid
 from typing import Optional
 import os
+import firebase_admin
+from firebase_admin import credentials, storage
+import os
+import uuid
+from datetime import datetime
+
+# Initialize Firebase Admin (add this to your main.py)
+cred_path = os.environ.get("FIREBASE_CREDENTIALS", "./firebase-credentials.json")
+cred = credentials.Certificate(cred_path)
+firebase_admin.initialize_app(cred, {
+    'storageBucket': 'extreme-learning-ba3b3.firebasestorage.app'  # Replace with your actual bucket
+})
+
+# Access Firebase Storage bucket
+bucket = storage.bucket()
+
+async def upload_to_firebase(video_data, user_id):
+    """
+    Upload a video to Firebase Storage
+    
+    Args:
+        video_data (bytes): The video binary data
+        user_id (str): The user ID who created the video
+        
+    Returns:
+        str: The public URL of the uploaded video
+    """
+    # Create a unique filename
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    filename = f"videos/{user_id}/{timestamp}_{uuid.uuid4()}.mp4"
+    
+    # Upload to Firebase Storage
+    blob = bucket.blob(filename)
+    blob.upload_from_string(
+        video_data,
+        content_type='video/mp4'
+    )
+    
+    # Make the file publicly accessible
+    blob.make_public()
+    
+    # Return the public URL
+    return blob.public_url
 
 app = FastAPI()
 
@@ -43,21 +86,30 @@ async def process_text(request: TextRequest):
     # 1. Process the text with your AI model
     # 2. Generate a video
     # 3. Store it somewhere
+    sample_video_data = open("sample_video.mp4", "rb").read()
+ 
+    try:
+        video_url = await upload_to_firebase(sample_video_data, request.userId)
+        
+        # Store metadata in your database (in-memory for this example)
+        videos[video_id] = {
+            "text": request.text,
+            "userId": request.userId,
+            "status": "completed",
+            "videoUrl": video_url,
+            "createdAt": datetime.now().isoformat()
+        }
+        
+        return {
+            "videoId": video_id,
+            "message": "Video generation completed",
+            "success": True,
+            "videoUrl": video_url  # Return the URL to the frontend
+        }
+    except Exception as e:
+        print(f"Error uploading to Firebase: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to upload video: {str(e)}")
     
-    # For the prototype, we'll simulate processing
-    videos[video_id] = {
-        "text": request.text,
-        "userId": request.userId,
-        "status": "completed",
-        # In a real app, this would be the URL to the generated video
-        "videoUrl": f"https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4",
-    }
-    
-    return {
-        "videoId": video_id,
-        "message": "Video generation completed",
-        "success": True
-    }
 
 @app.get("/videos/{video_id}")
 async def get_video(video_id: str):
