@@ -10,11 +10,20 @@ import os
 import uuid
 from datetime import datetime
 
-# Initialize Firebase Admin (add this to your main.py)
-cred_path = os.environ.get("FIREBASE_CREDENTIALS", "./firebase-credentials.json")
-cred = credentials.Certificate(cred_path)
+# Initialize Firebase Admin 
+# Get credentials from environment variable
+cred_json = os.environ.get("FIREBASE_CREDENTIALS")
+
+# Parse the JSON string to create a credential object
+if cred_json:
+    cred_dict = json.loads(cred_json)
+    cred = credentials.Certificate(cred_dict)
+else:
+    # Fallback for local development
+    cred = credentials.Certificate("../extreme-learning-ba3b3-firebase-adminsdk-fbsvc-8a0b3ec797.json")
+
 firebase_admin.initialize_app(cred, {
-    'storageBucket': 'extreme-learning-ba3b3.firebasestorage.app'  # Replace with your actual bucket
+    'storageBucket': 'extreme-learning-ba3b3.firebasestorage.app'  # bucket
 })
 
 # Access Firebase Storage bucket
