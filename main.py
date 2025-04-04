@@ -11,7 +11,7 @@ import uuid
 from datetime import datetime
 import json
 import requests
-from video_utils import parse_slides, create_slide_image, create_video_from_slides
+from video_utils import parse_slides, create_slide_image, create_video_from_slides_and_audio
 
 # Initialize Firebase Admin 
 # Get credentials from environment variable
