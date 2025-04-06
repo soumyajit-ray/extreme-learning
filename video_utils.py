@@ -111,3 +111,4 @@ def create_video_from_slides_and_audio(slides_folder, audio_folder, output_video
         codec='libx264',
         audio_codec='aac'
     )
+    return output_video_path
