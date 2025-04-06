@@ -204,7 +204,7 @@ async def process_text(request: TextRequest):
     audio_folder = "audio_files"  # Folder containing MP3 files named slide_1.mp3, slide_2.mp3, etc.
     output_video = "presentation.mp4"
 
-    slides_text = get_claude_response(user_prompt)
+    slides_text = get_claude_response(detailed_prompt)
     # Parse slides
     slides = parse_slides(slides_text)
     # Create slide images
