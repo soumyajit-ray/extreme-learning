@@ -92,7 +92,7 @@ def create_video_from_slides_and_audio(slides_folder, audio_folder, output_video
             duration = audio.info.length
         
         # Create image clip with audio duration
-        slide_clip = mp.ImageClip(slide_path).set_duration(duration)
+        slide_clip = mp.ImageClip(slide_path).with_duration(duration)
         
         # Add audio if available
         if os.path.exists(audio_path):
