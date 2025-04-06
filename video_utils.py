@@ -4,7 +4,7 @@ from PIL import Image, ImageDraw, ImageFont
 import moviepy as mp
 from mutagen.mp3 import MP3
 
-async def parse_slides(content):
+def parse_slides(content):
     """
     Parse the text and extract individual slides.
     Returns a list of dictionaries with slide number and content.
@@ -24,7 +24,7 @@ async def parse_slides(content):
     
     return slides
 
-async def create_slide_image(slide, output_folder, width=1920, height=1080):
+def create_slide_image(slide, output_folder, width=1920, height=1080):
     """
     Create an image for a slide with formatted text.
     """
@@ -73,7 +73,7 @@ async def create_slide_image(slide, output_folder, width=1920, height=1080):
     img.save(img_path)
     return img_path
 
-async def create_video_from_slides_and_audio(slides_folder, audio_folder, output_video_path):
+def create_video_from_slides_and_audio(slides_folder, audio_folder, output_video_path):
     """
     Create a video presentation with slides and audio.
     """

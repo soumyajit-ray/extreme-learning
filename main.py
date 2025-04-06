@@ -123,7 +123,7 @@ The presentation will include:
 - Focus areas: Theoretical foundations with a focus on interview questions
 Please provide as much detail as possible in the above sections.
 """
-async def get_claude_response(prompt):
+def get_claude_response(prompt):
     headers = {
         "x-api-key": llm_api_key,
         "content-type": "application/json",
@@ -155,7 +155,7 @@ def save_response_to_file(response_text, filename="claude_response.txt"):
         file.write(response_text)
     print(f"Response saved to {filename}")
 
-async def upload_video_to_firebase(video_path, user_id):
+def upload_video_to_firebase(video_path, user_id):
     """
     Upload a video file to Firebase Storage
     
